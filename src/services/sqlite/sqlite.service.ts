@@ -1,31 +1,16 @@
-import { Database, sqlite3 }from 'sqlite3';
+import { Database, ERROR, sqlite3 }from 'sqlite3';
 import { listTables } from '../../tables/listTables';
 export class SqliteService {
-    private _sqlite: sqlite3;
-
-    constructor(sqlite: sqlite3) {
-        this._sqlite = sqlite;
-        this._sqlite.verbose();
-    }
-
+    sqlite: sqlite3 = require('sqlite3').verbose();
+    private namedb:string = 'Myfinance.db';
 
     createDataBase = () => {
-        return new Promise<Database>(() => new this._sqlite.Database('./../../data/Myfinance.db',(error: Error| null) => {
+        return new  this.sqlite.Database( this.namedb ?? 'Myfinance.db',(error: Error| null) => {
             if(error)
-                console.log(`Error: ${error.name}\n, 
-                Messega: ${error.message},\n
-                Stack: ${error.stack ??'Nenhuma stack apresentada!'}`
-                );
-        } ))
-        .then((db: Database) => {
-            return db;
-        }).catch( (error: Error) => {
-            if(error)
-            console.log(`Error: ${error.name}\n, 
-            Messega: ${error.message},\n
-            Stack: ${error.stack ??'Nenhuma stack apresentada!'}`
-            );
-        });
+                console.log(`- - - - - - - - - - - - - - - - - - - - -\n
+                Messega: ${error.message},\nStack: ${error.stack ??'Nenhuma stack apresentada!'}\n
+                - - - - - - - - - - - - - - - - - - - - -\n`);
+        } );
     }
 
     createTables = (db: Database) => {
@@ -41,8 +26,14 @@ export class SqliteService {
                     db.run(element.query);
                     console.log('---------------------------------');
                 }
-            }
-        );
+            });
         db.close();
     }
+
+    openDatabase = () => new this.sqlite.Database(this.namedb).on("open", () => {
+        console.log('Open conection DB!');
+      });
+    closeDatabase = () => new this.sqlite.Database(this.namedb).on("close", () => {
+        console.log('Close conection DB!');
+      });
 }
