@@ -1,5 +1,6 @@
-import { Database, ERROR, sqlite3 }from 'sqlite3';
+import { Database, RunResult, sqlite3 }from 'sqlite3';
 import { listTables } from '../../tables/listTables';
+import { Base } from '../../entities/base';
 export class SqliteService {
     sqlite: sqlite3 = require('sqlite3').verbose();
     private namedb:string = 'Myfinance.db';
@@ -33,7 +34,43 @@ export class SqliteService {
     openDatabase = () => new this.sqlite.Database(this.namedb).on("open", () => {
         console.log('Open conection DB!');
       });
+    
     closeDatabase = () => new this.sqlite.Database(this.namedb).on("close", () => {
         console.log('Close conection DB!');
       });
+ 
+    insertOne = (entity: object, params: string[]) => this.insertOneOrReplace(entity, params);
+    insertMany = (entity: object, params: string[]) => this.insertManyOrReplace(entity, params);
+
+    private insertOneOrReplace(entity: object, params: string[]) {
+        const db = this.openDatabase();
+        const entidade = Object.assign(new Base(), entity)
+        const tablename:string = 'lancamentos' ?? entidade.tableName;        
+        let binds: string = '';
+        for (let index = 0; index < 10; index++) {
+            binds.concat('?, ')
+        }
+        binds.slice(0, binds.length -1);
+
+        return db.run(`INSERT INTO ${tablename} VALUES (${binds})`, params,(result: RunResult) =>{
+            if(result.changes > 0)
+                return result.lastID; 
+        });
+    }
+    
+    private insertManyOrReplace(entity: object, params: string[]) {
+        const db = this.openDatabase();
+        const entidade = Object.assign(new Base(), entity)
+        const tablename:string = 'lancamentos' ?? entidade.tableName;      
+        let binds: string = '';
+        for (let index = 0; index < 10; index++) {
+            binds.concat('?, ')
+        }
+        binds.slice(0, binds.length -1);
+
+        return db.run(`INSERT INTO ${tablename} VALUES (${binds})`, params,(result: RunResult) =>{
+            if(result.changes > 0)
+                return result.lastID; 
+        });
+    }
 }
