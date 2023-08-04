@@ -33,17 +33,20 @@ export class AppService {
             const lancamento: Lancamentos = {
                 valor: 300,
                 _id: ObjectId.createFromTime(new Date().getTime()),
-                categoria: "Outros",
+                categoria: "Alimentação",
                 data: new Date(),
                 dataPagamento: new Date(),
                 formaPagamento: "PIX",
-                nome: "Salário",
+                nome: "Conta DM Card",
                 tipoLancamento: {
-                    categoriaLancamento: "Receita",
-                    tipo: "Fixa",
+                    categoriaLancamento: "Despesa",
+                    tipo: "Variável",
                 },
             };
             await this.lancamentoService.insert(lancamento);
+
+            const getEntity = await this.lancamentoService.getById('c19c54ac0000000000000000');
+            console.log('Retorno FindById: ' +  getEntity.nome );
             console.log('Deu bom');
         } catch (error) {
             console.log('Deu BO');
