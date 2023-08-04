@@ -1,18 +1,14 @@
-import { Database } from "sqlite3";
-import { SqliteService } from "../sqlite/sqlite.service";
+import { IRetornoResult } from "../../interface/retornoResult.interface";
+import { MongoService } from "../mongo/mongo.service";
 
 export class AppService {
-    constructor(private sqliteService: SqliteService){}
+    constructor(private mongoService: MongoService){}
 
     initApp = async () => {
         console.log('Iniciando a criação da base de Dados');
-        const db: Database | void = await this.sqliteService.createDataBase();
-        console.log(`Criamos o banco de dados vamo criar o resto`);
-        if(db == null){
-            console.log('Base de dados não criado');
-            return false;
+        const createData: IRetornoResult = await this.mongoService.createCollections();
+        if (!createData.hasCreated){
+            console.log(`Mensagem: ${createData.mensagem}\nList: ${createData.listCollections?.length ? createData.listCollections[0].errMessage : null}`);
         }
-
-        await this.sqliteService.createTables(db);
     }
 }

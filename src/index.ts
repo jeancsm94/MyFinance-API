@@ -1,9 +1,8 @@
 
 import { AppService } from "./services/app-service/app.service";
-import { SqliteService } from "./services/sqlite/sqlite.service";
+import { MongoService } from "./services/mongo/mongo.service";
 
-const app = new AppService(new SqliteService());
-
+const app = new AppService(new MongoService());
 
 console.log('Iniciando Projeto!');
 app.initApp();
