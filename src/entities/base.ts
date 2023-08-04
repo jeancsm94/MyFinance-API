@@ -9,9 +9,9 @@ export class Base implements IBase {
         this.constructor.prototype.childrenTablesProps = this.constructor.prototype.childrenTablesProps || [];
       }
     _id: ObjectId;
-    lastUpdated: Date = new Date();
+    lastUpdated?: Date = new Date();
     @DbIgnore()
-    tableName: string;
+    tableName?: string;
     @DbIgnore()
     childrenTablesProps?: { propertyName: string; typeInstance: Base }[];
     @DbIgnore()
