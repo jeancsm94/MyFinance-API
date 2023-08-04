@@ -5,13 +5,18 @@ import { mongoUrl, mongoUrlVscode, passwdMongo, userMongo } from "../../configs/
 import { IRetornoResult } from "../../interface/retornoResult.interface";
 
 export class MongoService {
+    
     private _client: MongoClient;
+
     get client(): MongoClient {
         return this._client;
     }
-    constructor() {}
 
-    async connect(): Promise<void> {
+    constructor() {
+
+    }
+
+    async connect(): Promise<boolean> {
         // console.log("URl Mongo" + mongoUrl);
         console.log("URl Mongo VSCODE" + mongoUrlVscode);
         // this._client = new MongoClient(mongoUrl, {
@@ -34,7 +39,15 @@ export class MongoService {
             }
         });
         console.log(`Tentando conectar!`);
-        await this._client.connect();
+        let retorno =await this._client.connect();
+        
+        if (retorno) 
+        {
+            console.log(`Conectado com sucesso!`);
+            
+            return true;
+        } else
+            return false;
     }
 
     async disconnect(): Promise<void> {
