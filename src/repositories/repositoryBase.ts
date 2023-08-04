@@ -17,7 +17,7 @@ export class RepositoryBase<T extends Base, IT extends IBase> implements IReposi
     
     async insert(item:T): Promise<InsertOneResult> {
 
-        const collection: InsertOneResult = await  this.mongo.client.db().collection(item.tableName).insertOne(item);
+        const collection: InsertOneResult = await  this.mongo.client.db().collection(this.entity.tableName ?? '').insertOne(item);
         return collection;
     }
     async find(query: any): Promise<T | T[]> {
