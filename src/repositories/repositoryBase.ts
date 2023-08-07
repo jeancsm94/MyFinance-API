@@ -1,29 +1,38 @@
 import { DeleteResult, Document, Filter, ModifyResult, MongoAPIError, ObjectId, OptionalUnlessRequiredId } from "mongodb";
-import { Base } from "../entities/base";
 import { ResultMongo } from "../interface/InserResult.interface";
-import { IBase } from "../interface/base.interface";
 import { IRepository } from "../interface/repository.interface";
 import { MongoService } from "../services/mongo/mongo.service";
-import { IProjectMongo } from "../interface/projectMongo.interface";
+import { Collection } from 'mongodb';
+import { T } from "../type/generictype";
 
-export class RepositoryBase<T extends Base, IT extends IBase> implements IRepository<T,IT> {
-    collectionName: string;
-    constructor(private mongo: MongoService, private entity: T) {
-        this.collectionName = this.entity.tableName ?? '';
+export class RepositoryBase implements IRepository {
+    private _collection: Collection<Document>;
+    private entity: T;
+
+    get collection() {
+        return this._collection;
+    }
+    set collection(value: Collection<Document>) {
+        this._collection = value;
+    }
+    constructor(private mongo: MongoService, private _entity: T) {
         this.mongo.connect()
-            .then( hasConnected => {
-                if(!hasConnected) {
-                    throw new Error('Could not connect to MongoDB');
-                }
-            });
+        .then( hasConnected => {
+            if(!hasConnected) {
+                throw new Error('Could not connect to MongoDB');
+            }
+        });
+        this.entity = this._entity;
+        console.log('Nome da collection: ' + this.entity.tableName);
+        this.getCollection().then( result => this.collection = result);
     }
     
     async insert(item:T): Promise<ResultMongo> {
 
-        const collection = await  this.mongo.client.db().collection(this.collectionName).insertOne(item);
+        const result = await this.collection.insertOne(item);
         return {
-            acknowledged: collection.acknowledged,
-            insertedId: collection.insertedId.id.toString()
+            acknowledged: result.acknowledged,
+            insertedId: result.insertedId.id.toString()
         };
     }
     async find(query: any): Promise<T | T[]> {
@@ -41,16 +50,17 @@ export class RepositoryBase<T extends Base, IT extends IBase> implements IReposi
     async findById(id: string): Promise<T> {
         let item: T;
         
-       const document = (await this.mongo.client.db().collection(this.collectionName).find<T>({ _id:  new ObjectId(id) }).toArray()).at(0);
+       const document = (await this.collection.find({ _id:  new ObjectId(id) }).toArray()).at(0);
        item = Object.assign(this.entity, document);
         return item;
     }
     async findAll(): Promise<T[]> {        
-       return await this.mongo.client.db().collection(this.collectionName).find<T>({ }).toArray();
+       let documents =  await this.collection.find({ }).toArray();
+       return this.createList(documents);
        
     }
     async update(id: string, item: T): Promise<any> {
-        const resutl = await this.mongo.client.db().collection(this.collectionName).findOneAndReplace({ _id:new ObjectId(id) }, item)
+        const resutl = await this.collection.findOneAndReplace({ _id:new ObjectId(id) }, item)
         .catch(error => console.log(error));
 
         return {
@@ -60,7 +70,7 @@ export class RepositoryBase<T extends Base, IT extends IBase> implements IReposi
         } 
     }
     async delete(id: string): Promise<boolean> {
-        const result: DeleteResult | void = await this.mongo.client.db().collection(this.collectionName).deleteOne({ _id:new ObjectId(id) })
+        const result: DeleteResult | void = await this.collection.deleteOne({ _id:new ObjectId(id) })
             .catch(error => console.log(error));
 
         if (result?.acknowledged)
@@ -69,9 +79,18 @@ export class RepositoryBase<T extends Base, IT extends IBase> implements IReposi
             return false;
     }
 
-    createList(entities: T[]): T[] {
+    createList(entities: any[]): T[] {
         const listRetorno: T[] = [];
         entities.map( item => listRetorno.push(Object.assign(this.entity, item)));
         return listRetorno;
+    }
+    
+    getCollection = async (): Promise<Collection<Document>> => {
+        const collection = new Promise<Collection<Document>>(async (resolve, reject) => {
+            const result = await this.mongo.getCollection(this.entity.tableName ?? '')
+            resolve(result);
+            reject();
+        });
+        return collection;
     }
 }

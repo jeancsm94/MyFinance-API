@@ -1,8 +1,9 @@
 import { OptionalUnlessRequiredId } from "mongodb";
 import { ResultMongo } from "./InserResult.interface";
 import { IProjectMongo } from "./projectMongo.interface";
-
-export interface IRepository<T,IT> {
+import { Base } from "../entities/base";
+import { T } from "../type/generictype";
+export interface IRepository {
     insert(item: T): Promise<ResultMongo>;
     find(query: any): Promise<T | T[]>;
     findById(id: string): Promise<T>;
