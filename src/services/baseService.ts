@@ -3,6 +3,7 @@ import { IBase } from "../interface/base.interface";
 import { IBaseService } from "../interface/baseService.interface";
 import { Document } from "mongodb";
 import { RepositoryBase } from "../repositories/repositoryBase";
+import { ResultMongo } from "../interface/InserResult.interface";
 
 export class BaseService<T extends Base, IT extends IBase> implements IBaseService<T> {
     private _project: any;
@@ -22,15 +23,15 @@ export class BaseService<T extends Base, IT extends IBase> implements IBaseServi
     }
 
     async getById(id: string): Promise<T> {
-        return await this.repository.findById(id, this.project);
+        return await this.repository.findById(id);
     }
-    getAll(): T[] {
-        throw new Error("Method not implemented.");
+    async getAll(): Promise<T[]> {
+        return await this.repository.findAll();
     }
-    update(id: string, item: T): void {
-        throw new Error("Method not implemented.");
+    async update(id: string, item: T): Promise<any> {
+        return await this.repository.update(id,item);
     }
-    delete(id: string): void {
-        throw new Error("Method not implemented.");
+    async delete(id: string): Promise<any> {
+        return await this.repository.delete(id);
     }
 }
