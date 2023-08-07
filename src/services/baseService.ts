@@ -4,8 +4,9 @@ import { IBaseService } from "../interface/baseService.interface";
 import { Document } from "mongodb";
 import { RepositoryBase } from "../repositories/repositoryBase";
 import { ResultMongo } from "../interface/InserResult.interface";
+import { T } from "../type/generictype";
 
-export class BaseService<T extends Base, IT extends IBase> implements IBaseService<T> {
+export class BaseService implements IBaseService {
     private _project: any;
 
     set project(project: Document) {
@@ -16,10 +17,10 @@ export class BaseService<T extends Base, IT extends IBase> implements IBaseServi
         return this._project;
     }
 
-    constructor(private repository: RepositoryBase<T,IT>) {}
+    constructor(private repository: RepositoryBase) {}
     
-    async insert(item: T): Promise<void> {
-        await this.repository.insert(item);
+    async insert(item: T): Promise<any> {
+       return await this.repository.insert(item);
     }
 
     async getById(id: string): Promise<T> {
@@ -31,7 +32,7 @@ export class BaseService<T extends Base, IT extends IBase> implements IBaseServi
     async update(id: string, item: T): Promise<any> {
         return await this.repository.update(id,item);
     }
-    async delete(id: string): Promise<any> {
+    async delete(id: string): Promise<boolean> {
         return await this.repository.delete(id);
     }
 }

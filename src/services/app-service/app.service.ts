@@ -24,7 +24,7 @@ export class AppService {
                 }`
             );
         }
-        await this.testeAPI();
+        //await this.testeAPI();
     };
 
     testeAPI = async () => {

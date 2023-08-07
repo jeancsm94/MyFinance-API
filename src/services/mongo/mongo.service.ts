@@ -1,8 +1,9 @@
-import { Db, MongoClient, MongoServerError } from "mongodb";
+import { Collection, Db, MongoClient, MongoServerError } from "mongodb";
 
 import { ICollectionError, listCollections } from "./collections/collections-list";
 import { mongoUrl, mongoUrlVscode, passwdMongo, userMongo } from "../../configs/enviroment";
 import { IRetornoResult } from "../../interface/retornoResult.interface";
+import { Base } from "../../entities/base";
 
 export class MongoService {
     
@@ -60,6 +61,10 @@ export class MongoService {
         console.log(
             "Pinged your deployment. You successfully connected to MongoDB!"
         );
+    }
+
+    async getCollection( collectionName: string) {
+        return await this.client.db().collection(collectionName);
     }
 
     async createCollections(): Promise<IRetornoResult> {
