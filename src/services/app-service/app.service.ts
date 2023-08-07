@@ -30,14 +30,14 @@ export class AppService {
     testeAPI = async () => {
         console.log('Teste Inserção lancamento');
         try {
-            const lancamento: Lancamentos = {
+            let lancamento: Lancamentos = {
                 valor: 300,
                 _id: ObjectId.createFromTime(new Date().getTime()),
-                categoria: "Alimentação",
+                categoria: "Vetuário",
                 data: new Date(),
                 dataPagamento: new Date(),
                 formaPagamento: "PIX",
-                nome: "Conta DM Card",
+                nome: "Reggla",
                 tipoLancamento: {
                     categoriaLancamento: "Despesa",
                     tipo: "Variável",
@@ -45,8 +45,27 @@ export class AppService {
             };
             await this.lancamentoService.insert(lancamento);
 
-            const getEntity = await this.lancamentoService.getById('c19c54ac0000000000000000');
+            const getEntity = await this.lancamentoService.getById('c19c54ac0000000000000000'); 
+            const getAll = await this.lancamentoService.getAll();
+            lancamento = {
+                valor: 400,
+                _id: ObjectId.createFromTime(new Date().getTime()),
+                categoria: "Vetuário",
+                data: new Date(),
+                dataPagamento: new Date(),
+                formaPagamento: "PIX",
+                nome: "Reggla",
+                tipoLancamento: {
+                    categoriaLancamento: "Despesa",
+                    tipo: "Variável",
+                },
+            };
+            const updateLancamento= await this.lancamentoService.update('c19c54ac0000000000000000', lancamento);
+            const removeLancamento = await this.lancamentoService.delete('c1dd8a5d0000000000000000');
             console.log('Retorno FindById: ' +  getEntity.nome );
+            console.log('Retorno FindAll: ' +  getAll);
+            console.log('Retorno updateLancamento: ' +  updateLancamento.id);
+            console.log('Retorno removeLancamento True or false: ' +  removeLancamento);
             console.log('Deu bom');
         } catch (error) {
             console.log('Deu BO');
