@@ -8,22 +8,13 @@ import { TipoLancamento } from "../../entities/tipoLancamento";
 export class AppService {
     constructor(
         private mongoService: MongoService,
-        private lancamentoService: LancamentoService
+        private lancamentoService: LancamentoService,
     ) {}
 
     initApp = async () => {
         console.log("Iniciando a criação da base de Dados");
-        const createData: IRetornoResult =
-            await this.mongoService.createCollections();
-        if (!createData.hasCreated) {
-            console.log(
-                `Mensagem: ${createData.mensagem}\nList: ${
-                    createData.listCollections?.length
-                        ? createData.listCollections[0].errMessage
-                        : null
-                }`
-            );
-        }
+        await this.mongoService.initDB();
+       
         //await this.testeAPI();
     };
 

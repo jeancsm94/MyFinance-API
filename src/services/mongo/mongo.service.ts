@@ -17,6 +17,21 @@ export class MongoService {
 
     }
 
+    initDB = async () => {
+        await this.connect();
+        const createData = await this.createCollections();
+        
+        if (!createData.hasCreated) {
+            console.log(
+                `Mensagem: ${createData.mensagem}\nList: ${
+                    createData.listCollections?.length
+                        ? createData.listCollections[0].errMessage
+                        : null
+                }`
+            );
+        }
+    }
+
     async connect(): Promise<boolean> {
         // console.log("URl Mongo" + mongoUrl);
         console.log("URl Mongo VSCODE" + mongoUrlVscode);
