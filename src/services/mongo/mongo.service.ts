@@ -34,7 +34,7 @@ export class MongoService {
 
     async connect(): Promise<boolean> {
         // console.log("URl Mongo" + mongoUrl);
-        //console.log("URl Mongo VSCODE" + mongoUrlVscode);
+        console.log("URl Mongo" + mongoUrlVscode);
         // this._client = new MongoClient(mongoUrl, {
         //     serverApi: {
         //         version: '1',
