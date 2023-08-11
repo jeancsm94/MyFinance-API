@@ -1,0 +1,21 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const lancamentos_1 = require("./entities/lancamentos");
+const repositoryBase_1 = require("./repositories/repositoryBase");
+const app_service_1 = require("./services/app-service/app.service");
+const lancamento_service_1 = require("./services/lancamentos/lancamento.service");
+const mongo_service_1 = require("./services/mongo/mongo.service");
+const enviroment_1 = require("./configs/enviroment");
+const lancamento_controller_1 = require("./controller/lancamento.controller");
+const express = require("express");
+const server = express();
+const router = express.Router();
+const app = new app_service_1.AppService(new mongo_service_1.MongoService(), new lancamento_service_1.LancamentoService(new repositoryBase_1.RepositoryBase(new mongo_service_1.MongoService(), new lancamentos_1.Lancamentos())));
+console.log("Iniciando Projeto!");
+app.initApp();
+server.use(express.json());
+server.get("/api/", (req, res) => {
+    res.json('Hello ');
+});
+server.use(lancamento_controller_1.LancamentoController);
+server.listen(enviroment_1.port, () => console.log(`API iniciada com sucesso http://localhost:${enviroment_1.port}`));

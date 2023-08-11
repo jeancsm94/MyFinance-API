@@ -1,6 +1,5 @@
 import { OptionalUnlessRequiredId } from "mongodb";
 import { ResultMongo } from "./InserResult.interface";
-import { IProjectMongo } from "./projectMongo.interface";
 import { Base } from "../entities/base";
 import { T } from "../type/generictype";
 export interface IRepository {
