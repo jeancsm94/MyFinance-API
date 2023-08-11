@@ -7,7 +7,7 @@
     "build": "tsc",
     "test": "vitest",
     "coverage": "vitest run --coverage",
-    "start": "node ./dist/src/index.js",
+    "start": "node ./opt/render/project/index.js",
     "dev": "nodemon ./src/index.ts --inspect"
   },
   "keywords": [],
