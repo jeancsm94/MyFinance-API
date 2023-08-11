@@ -43,7 +43,7 @@ class MongoService {
     connect() {
         return __awaiter(this, void 0, void 0, function* () {
             // console.log("URl Mongo" + mongoUrl);
-            console.log("URl Mongo VSCODE" + enviroment_1.mongoUrlVscode);
+            //console.log("URl Mongo VSCODE" + mongoUrlVscode);
             // this._client = new MongoClient(mongoUrl, {
             //     serverApi: {
             //         version: '1',
