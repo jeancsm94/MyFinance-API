@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "tsc",
+    "build": "tsc --build --verbose",
     "test": "vitest",
     "coverage": "vitest run --coverage",
     "start": "node ./opt/render/project/index.js",
