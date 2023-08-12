@@ -22,17 +22,11 @@ console.log("Iniciando Projeto!");
 app.initApp();
 
 server.use(function (req: Request, res: Request, next: NextFunction) {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header(
-        "Access-Control-Allow-Methods",
-        "GET,HEAD,OPTIONS,POST,PUT,DELETE"
-        );
-        res.header(
-            "Access-Control-Allow-Headers",
-            "Origin, X-Requested-With, Content-type, Accept, Authorization"
-            );
-            next();
-        });
+    res.header( "Access-Control-Allow-Origin" );
+    res.header( "Access-Control-Allow-Methods" );
+    res.header( "Access-Control-Allow-Headers" );
+    next();
+});
         
 server.use(express.json());
 server.get("/api/", (req: Request, res: Response) => {
