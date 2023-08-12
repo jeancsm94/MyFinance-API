@@ -23,7 +23,7 @@ app.initApp();
 
 
 server.use(express.json());
-server.use((req, res, next) => {
+server.use((res, next) => {
     res.header("Access-Control-Allow-Origin", "*");
     res.header(
         "Access-Control-Allow-Methods",
