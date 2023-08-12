@@ -8,6 +8,7 @@ import { MongoService } from "./services/mongo/mongo.service";
 import { port } from "./configs/enviroment";
 import { LancamentoController } from "./controller/lancamento.controller";
 const express = require("express");
+const cors = require("cors");
 
 const server = express();
 const router = express.Router();
@@ -21,12 +22,13 @@ const app = new AppService(
 console.log("Iniciando Projeto!");
 app.initApp();
 
-server.use(function (req: Request, res: Request, next: NextFunction) {
-    res.header( "Access-Control-Allow-Origin" );
-    res.header( "Access-Control-Allow-Methods" );
-    res.header( "Access-Control-Allow-Headers" );
-    next();
-});
+server.use(cors({ origin: '*' }));
+// server.use(function (req: Request, res: Request, next: NextFunction) {
+//     res.header( "Access-Control-Allow-Origin" );
+//     res.header( "Access-Control-Allow-Methods" );
+//     res.header( "Access-Control-Allow-Headers" );
+//     next();
+// });
         
 server.use(express.json());
 server.get("/api/", (req: Request, res: Response) => {
