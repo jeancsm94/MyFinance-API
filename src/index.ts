@@ -21,21 +21,20 @@ const app = new AppService(
 console.log("Iniciando Projeto!");
 app.initApp();
 
-
-server.use(express.json());
-server.use((res, next) => {
+server.use(function (res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header(
         "Access-Control-Allow-Methods",
         "GET,HEAD,OPTIONS,POST,PUT,DELETE"
-    );
-    res.header(
-        "Access-Control-Allow-Headers",
-        "Origin, X-Requested-With, Content-type, Accept, Authorization"
-    );
-    next();
-});
-
+        );
+        res.header(
+            "Access-Control-Allow-Headers",
+            "Origin, X-Requested-With, Content-type, Accept, Authorization"
+            );
+            next();
+        });
+        
+server.use(express.json());
 server.get("/api/", (req: Request, res: Response) => {
     res.json('Hello ')
 });
