@@ -1,4 +1,4 @@
-import { Request, Response, Router } from "express";
+import { NextFunction, Request, Response, Router } from "express";
 import { Lancamentos } from "./entities/lancamentos";
 import { ILancamentos } from "./interface/lancamento.interface";
 import { RepositoryBase } from "./repositories/repositoryBase";
@@ -21,7 +21,7 @@ const app = new AppService(
 console.log("Iniciando Projeto!");
 app.initApp();
 
-server.use(function (res, next) {
+server.use(function (req: Request, res: Request, next: NextFunction) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header(
         "Access-Control-Allow-Methods",
