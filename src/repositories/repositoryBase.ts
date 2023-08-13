@@ -3,11 +3,13 @@ import { ResultMongo } from "../interface/InserResult.interface";
 import { IRepository } from "../interface/repository.interface";
 import { MongoService } from "../services/mongo/mongo.service";
 import { Collection } from 'mongodb';
-import { T } from "../type/generictype";
+import { Base } from "../entities/base";
+import { BaseCollection } from "../services/mongo/collections/baseCollection";
 
-export class RepositoryBase implements IRepository {
+export class RepositoryBase<T extends Base, U extends BaseCollection> implements IRepository {
     private _collection: Collection<Document>;
     private entity: T;
+    private entityCollection: U;
 
     get collection() {
         return this._collection;
@@ -15,7 +17,7 @@ export class RepositoryBase implements IRepository {
     set collection(value: Collection<Document>) {
         this._collection = value;
     }
-    constructor(private mongo: MongoService, private _entity: T) {
+    constructor(private mongo: MongoService, private _entity: T, protected _entityCollection: U) {
         this.mongo.connect()
         .then( hasConnected => {
             if(!hasConnected) {
@@ -23,13 +25,14 @@ export class RepositoryBase implements IRepository {
             }
         });
         this.entity = this._entity;
+        this.entityCollection = _entityCollection;
         console.log('Nome da collection: ' + this.entity.tableName);
         this.getCollection().then( result => this.collection = result);
     }
     
     async insert(item:T): Promise<ResultMongo> {
-
-        const result = await this.collection.insertOne(item);
+        const newDocument = Object.assign(this.entityCollection, item);
+        const result = await this.collection.insertOne(newDocument);
         return {
             acknowledged: result.acknowledged,
             insertedId: result.insertedId.id.toString()

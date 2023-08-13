@@ -3,10 +3,12 @@ import { LancamentoService } from "../services/lancamentos/lancamento.service";
 import { LancamentoRepository } from "../repositories/lancamentos/lancamento.repository";
 import { Lancamentos } from "../entities/lancamentos";
 import { MongoService } from "../services/mongo/mongo.service";
+import { ObjectId } from "mongodb";
+import { LancamentoCollection } from "../services/mongo/collections/collections-entities/lancamentoCollection";
 
 export const LancamentoController = express.Router();
 const service = new LancamentoService(
-    new LancamentoRepository(new MongoService(), new Lancamentos())
+    new LancamentoRepository(new MongoService(), new Lancamentos(), new LancamentoCollection())
 );
 
 LancamentoController.get("/api/lancamento/", (req, res) => {
@@ -23,7 +25,7 @@ LancamentoController.get("/api/lancamento/:id", (req, res) => {
 });
 
 LancamentoController.put("/api/lancamento/:id", (req, res) => {
-    let newLancamanto = new Lancamentos();
+    let newLancamanto = new LancamentoCollection();
 
     const { id } = req.params;
 
@@ -49,19 +51,20 @@ LancamentoController.delete("/api/lancamento/:id", (req, res) => {
 });
 
 LancamentoController.post("/api/lancamento/", (req, res) => {
-    let newLancamanto = new Lancamentos();
+    let newLancamanto = new LancamentoCollection();
 
-    // const { id } = req.params;
+    const {nome,data, dataPagamento, formaPagamento, categoria, tipoLancamento, valor }: LancamentoCollection = req.body;
 
-    // newLancamanto.nome = nome;
-    // newLancamanto.data = data;
-    // newLancamanto.valor = valor;
-    // newLancamanto.dataPagamento = dataPagamento;
-    // newLancamanto.formaPagamento = formaPagamento;
-    // newLancamanto.tipoLancamento = tipoLancamento;
-    // newLancamanto.categoria = categoria;
+    newLancamanto._id = new ObjectId();
+    newLancamanto.nome = nome;
+    newLancamanto.data = data;
+    newLancamanto.valor = valor;
+    newLancamanto.dataPagamento = dataPagamento;
+    newLancamanto.formaPagamento = formaPagamento;
+    newLancamanto.tipoLancamento = tipoLancamento;
+    newLancamanto.categoria = categoria;
     
     service.insert(newLancamanto).then((lancamentos) => {
-        res.json(lancamentos);
+        res.json(lancamentos.insertedId);
     });
 });

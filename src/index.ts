@@ -7,6 +7,7 @@ import { LancamentoService } from "./services/lancamentos/lancamento.service";
 import { MongoService } from "./services/mongo/mongo.service";
 import { port } from "./configs/enviroment";
 import { LancamentoController } from "./controller/lancamento.controller";
+import { LancamentoCollection } from "./services/mongo/collections/collections-entities/lancamentoCollection";
 const express = require("express");
 const cors = require("cors");
 
@@ -15,7 +16,7 @@ const router = express.Router();
 const app = new AppService(
     new MongoService(),
     new LancamentoService(
-        new RepositoryBase(new MongoService(), new Lancamentos())
+        new RepositoryBase(new MongoService(), new Lancamentos(), new LancamentoCollection())
     )
 );
 
