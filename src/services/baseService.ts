@@ -1,25 +1,13 @@
-import { Base } from "../entities/base";
-import { IBase } from "../interface/base.interface";
 import { IBaseService } from "../interface/baseService.interface";
-import { Document } from "mongodb";
 import { RepositoryBase } from "../repositories/repositoryBase";
 import { ResultMongo } from "../interface/InserResult.interface";
-import { T } from "../type/generictype";
+import { T, U } from "../type/generictype";
 
 export class BaseService implements IBaseService {
-    private _project: any;
 
-    set project(project: Document) {
-        this._project = project;
-    }
-
-    get project(): any {
-        return this._project;
-    }
-
-    constructor(private repository: RepositoryBase) {}
+    constructor(private repository: RepositoryBase<T,U>) {}
     
-    async insert(item: T): Promise<any> {
+    async insert(item: T): Promise<ResultMongo> {
        return await this.repository.insert(item);
     }
 
