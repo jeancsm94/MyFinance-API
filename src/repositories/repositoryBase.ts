@@ -38,6 +38,8 @@ export class RepositoryBase<T extends Base, U extends BaseCollection> implements
             insertedId: result.insertedId.id.toString()
         };
     }
+
+    // TODO: Feature: Buscas complexas
     async find(query: any): Promise<T | T[]> {
         throw new Error("Method not implemented.");
         // const entities = await this.mongo.client.db().collection<IT>(this.entity.tableName).find(query).toArray();

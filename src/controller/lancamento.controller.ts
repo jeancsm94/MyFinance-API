@@ -28,14 +28,15 @@ LancamentoController.put("/api/lancamento/:id", (req, res) => {
     let newLancamanto = new LancamentoCollection();
 
     const { id } = req.params;
+    const {nome,data, dataPagamento, formaPagamento, categoria, tipoLancamento, valor }: LancamentoCollection = req.body;
 
-    // newLancamanto.nome = nome;
-    // newLancamanto.data = data;
-    // newLancamanto.valor = valor;
-    // newLancamanto.dataPagamento = dataPagamento;
-    // newLancamanto.formaPagamento = formaPagamento;
-    // newLancamanto.tipoLancamento = tipoLancamento;
-    // newLancamanto.categoria = categoria;
+    newLancamanto.nome = nome;
+    newLancamanto.data = data;
+    newLancamanto.valor = valor;
+    newLancamanto.dataPagamento = dataPagamento;
+    newLancamanto.formaPagamento = formaPagamento;
+    newLancamanto.tipoLancamento = tipoLancamento;
+    newLancamanto.categoria = categoria;
     
     service.update(id, newLancamanto).then((lancamentos) => {
         res.json(lancamentos);
