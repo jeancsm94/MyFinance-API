@@ -1,9 +1,8 @@
 import { Collection, Db, MongoClient, MongoServerError } from "mongodb";
 
 import { ICollectionError, listCollections } from "./collections/collections-list";
-import { mongoUrl, mongoUrlVscode, passwdMongo, userMongo } from "../../configs/enviroment";
+import { dev, mongoUrl, mongoUrlVscode, passwdMongo, userMongo } from "../../configs/enviroment";
 import { IRetornoResult } from "../../interface/retornoResult.interface";
-import { Base } from "../../entities/base";
 
 export class MongoService {
     
@@ -34,7 +33,7 @@ export class MongoService {
 
     async connect(): Promise<boolean> {
         // console.log("URl Mongo" + mongoUrl);
-        console.log("URl Mongo" + mongoUrlVscode);
+        console.log("URl Mongo " + mongoUrlVscode);
         // this._client = new MongoClient(mongoUrl, {
         //     serverApi: {
         //         version: '1',
@@ -42,18 +41,23 @@ export class MongoService {
         //         strict: true
         //     }
         // });
-        this._client = new MongoClient(mongoUrlVscode, {
-            authMechanism: "SCRAM-SHA-1",
-            auth:{
-                password: passwdMongo,
-                username: userMongo
-            },
-            serverApi: {
-                version: '1',
-                deprecationErrors: true,
-                strict: true
-            }
-        });
+        if(dev) {
+            this._client = new MongoClient(mongoUrlVscode, { useNewUrlParser: true });
+        }
+        else {
+            this._client = new MongoClient(mongoUrlVscode, {
+                authMechanism: "SCRAM-SHA-1",
+                auth:{
+                    password: passwdMongo,
+                    username: userMongo
+                },
+                serverApi: {
+                    version: '1',
+                    deprecationErrors: true,
+                    strict: true
+                }
+            });
+        }
         console.log(`Tentando conectar!`);
         let retorno =await this._client.connect();
         

@@ -6,3 +6,4 @@ export const mongoUrlVscode = process.env.DATABASE_URL ?? "";
 export const userMongo = process.env.USER_MONGO ?? "";
 export const passwdMongo = process.env.PASS_MONGO ?? "";
 export const port = process.env.PORT ?? "";
+export const dev = true;
